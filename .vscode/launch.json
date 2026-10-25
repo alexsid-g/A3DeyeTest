@@ -1,0 +1,70 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Benchmark TestFileSorter",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build solution (Release)",
+            "program": "${workspaceFolder}/Benchmark/bin/Release/net8.0/Benchmark.dll",
+            "args": [
+                "-t", "FileSorterBenchmark"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Benchmark TestFileGenerator",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build solution (Release)",
+            "program": "${workspaceFolder}/Benchmark/bin/Release/net8.0/Benchmark.dll",
+            "args": [
+                "-t", "FileGeneratorBenchmark"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Benchmark TestFileGenerator (Debug)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build solution (Debug)",
+            "program": "${workspaceFolder}/Benchmark/bin/Debug/net8.0/Benchmark.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "SortFile (Debug with args)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Debug build solution",
+            "program": "${workspaceFolder}/FileSorter/bin/Debug/net8.0/FileSorter.dll",
+            "args": [
+                "-i", "test-1gb.txt",
+                "-o", "sorted-data.txt",
+                "-m", "1GB"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "TestFileGenerator (Debug with args)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build solution (Debug)",
+            "program": "${workspaceFolder}/TestFileGenerator/bin/Debug/net8.0/TestFileGenerator.dll",
+            "args": [
+                "-o", "test-5gb.txt",
+                "-s", "100MB",
+                "--fast"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        }
+    ]
+}
