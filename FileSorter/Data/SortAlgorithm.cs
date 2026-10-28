@@ -1,6 +1,6 @@
 namespace FileSorter.Data;
 
-public enum SortingAlgorithm
+public enum SortAlgorithm
 {
     /// <summary>
     /// The best one. Single-path sorting.

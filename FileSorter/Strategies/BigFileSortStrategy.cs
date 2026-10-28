@@ -4,7 +4,7 @@ using FileSorter.Extensions;
 
 namespace FileSorter.Strategies;
 
-public class LargeFileSortStrategy : ISortStrategy
+public class BigFileSortStrategy : ISortStrategy
 {
     public void Run(FileSortingOptions options)
     {
@@ -34,19 +34,19 @@ public class LargeFileSortStrategy : ISortStrategy
             using DuckDBConnection connection = CreateAndInitializeDb(
                 options, tempDirectory, tempFile);
 
-            switch (options.LargeFileSortingAlgorithm)
+            switch (options.BigFileSortAlgorithm)
             {
-                case SortingAlgorithm.SortAndSave:
+                case SortAlgorithm.SortAndSave:
                     SortAndSaveData(connection, options.InputFilePath, outputFile);
                     break;
-                case SortingAlgorithm.ImportSortAndSave:
+                case SortAlgorithm.ImportSortAndSave:
                     ImportThenSortAndSaveData(connection, options.InputFilePath, outputFile);
                     break;
-                case SortingAlgorithm.SplitSortAndSave:
+                case SortAlgorithm.SplitSortAndSave:
                     SplitThenSortAndSaveData(connection, options.InputFilePath, outputFile, tempDirectory);
                     break;
                 default: throw new InvalidOperationException(
-                    $"Invalid sorting algorithm {options.LargeFileSortingAlgorithm}"); 
+                    $"Invalid sorting algorithm {options.BigFileSortAlgorithm}"); 
             }
         }
         finally
@@ -142,7 +142,8 @@ public class LargeFileSortStrategy : ISortStrategy
         string parquetsPath = Path.Combine(tempDirectory, "parquets");
         try
         {
-            string format = GetFormatFor("PARQUET");
+            // Format forces duckdb to split csv to a number of parquet files
+            string format = GetFormatFor("PARQUET", 100000, 3);
             string sql = @$"
                 COPY (
                     SELECT Number, Value
@@ -184,14 +185,14 @@ public class LargeFileSortStrategy : ISortStrategy
         }
     }
 
-    private static string GetFormatFor(string name)
+    private static string GetFormatFor(string name, int rowGroupsSize, int rowGroupsPerFile)
     {
         name = name.Trim().ToUpperInvariant();
         if (name.Equals("PARQUET"))
         {
             return $"{name}, COMPRESSION snappy" +
-                ", ROW_GROUP_SIZE 100000 " +
-                ", ROW_GROUPS_PER_FILE 5" +
+                $", ROW_GROUP_SIZE {rowGroupsSize} " +
+                $", ROW_GROUPS_PER_FILE {rowGroupsPerFile}" +
                 ", PER_THREAD_OUTPUT true";
         }
 

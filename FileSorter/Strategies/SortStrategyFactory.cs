@@ -22,6 +22,6 @@ public static class SortStrategyFactory
         FileInfo inputFile = new(options.InputFilePath);
         return SimpleSortStrategy.EstimateRequiredMemory(inputFile) <= memoryLimit
             ? new SimpleSortStrategy()
-            : new LargeFileSortStrategy();
+            : new BigFileSortStrategy();
     }
 }

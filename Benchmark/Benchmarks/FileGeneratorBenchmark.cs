@@ -23,7 +23,8 @@ public class FileGeneratorBenchmark
 
     public IEnumerable<GeneratorBenchmarkArgs> ValuesForArgs => [
         new("10MB", false), new("100MB", false), new("1GB", false),
-        //new("10MB", true), new("100MB", true), new("1GB", true),
+        // Use fast algorithm (save mem allocations and copies)
+        new("10MB", true), new("100MB", true), new("1GB", true),
     ];
 
     [Benchmark]
@@ -52,7 +53,6 @@ public class FileGeneratorBenchmark
             ? [generatorDll, "-o", args.OutputFile, "-s", args.Size, "--fast"]
             : [generatorDll, "-o", args.OutputFile, "-s", args.Size];
 
-        Stopwatch stopwatch = Stopwatch.StartNew(); 
         using Process process = ProcessStarter.Start("dotnet", options);
         if (!process.Start())
         {
@@ -69,9 +69,6 @@ public class FileGeneratorBenchmark
             throw new InvalidOperationException(
                 $"TestFileGenerator exited with code {process.ExitCode}.");
         }
-
-        stopwatch.Stop();
-        ConsoleUtils.WriteErrorLine($"{args} run for {stopwatch.Elapsed}");
     }
 }
 

@@ -12,7 +12,8 @@ public sealed class FileSortingOptions
     public string? MemoryLimit { get; set; }
 
     public string? TempDirectory { get; set; }
-    public SortingAlgorithm LargeFileSortingAlgorithm { get; set; } = SortingAlgorithm.SortAndSave;
+
+    public SortAlgorithm BigFileSortAlgorithm { get; set; } = SortAlgorithm.SortAndSave;
 
     public static long ParseMemoryLimit(string? memoryLimit)
     {

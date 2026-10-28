@@ -40,7 +40,10 @@ Options:
 - `-o` — output file path (required by the current strategy implementation).
 - `-m` — optional memory limit in `MB` or `GB`. When provided, the sorter selects its simple or disk-backed strategy using an estimate of 1.3 times the input size. The large-file strategy passes the limit to DuckDB.
 - `-d` — optional DuckDB temporary directory for the large-file strategy. It defaults to the current working directory; provide an existing directory.
-- `-sa` - optional sorting algorithm for large files (the one you cannot keep in memory). One of []. 
+- `-sa` - optional sorting algorithm for large files (the one you cannot keep in memory). One of:
+    - 0 - SortAndSave - simple sort and save. Duckdb decides how to proceed.
+    - 1 - ImportSortAndSave - import to a single DUCKDB file, then sort and save from it.
+    - 2 - SplitSortAndSave - import to multiple PARQUET files, then sort and save from it. 
 
 The large-file path uses DuckDB's disk-backed database and temporary storage. The inactive Parquet split-and-merge path is not part of the current behavior, and no specific maximum supported file size is guaranteed.
 

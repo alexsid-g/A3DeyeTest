@@ -3,7 +3,7 @@ using Benchmark.Utils;
 
 namespace Benchmark.Data;
 
-public class FileSorterBenchmarkArgs : IComparable<FileSorterBenchmarkArgs>, IComparable
+public class FileSorterBenchmarkArgs : IBenchmarkArgs
 {
     private static int _nextId;
 
@@ -14,13 +14,33 @@ public class FileSorterBenchmarkArgs : IComparable<FileSorterBenchmarkArgs>, ICo
     public string InputFile { get; init; }
 
     public string OutputFile { get; init; }
+    public bool IsBig { get; init; }
+    /// <summary>
+    /// Valid for big files only. Default is 0 (SortAndSave).
+    /// 0 - SortAndSave - simple sort and save. Duckdb decides how to proceed.
+    /// 1 - ImportSortAndSave - import to a single DUCKDB file, then sort and save from it.
+    /// 2 - SplitSortAndSave - import to multiple PARQUET files, then sort and save from it
+    /// </summary>
+    public int SortAlgorithm { get; init; }
 
     public string BenchmarkId => $"FS_{Id}_{Size}";
 
-    public FileSorterBenchmarkArgs(string size, bool isLarge)
+    public FileSorterBenchmarkArgs(string size) : this(size, false, 0)
+    {
+        
+    }
+
+    public FileSorterBenchmarkArgs(string size, bool isBig, int sortAlgorithm)
     {
         Id = Interlocked.Increment(ref _nextId);
         Size = size;
+        IsBig = isBig;
+        SortAlgorithm = sortAlgorithm;
+
+        if (SortAlgorithm < 0 && 2 < SortAlgorithm)
+        {
+            throw new ArgumentException("Invalid sort algorithm", nameof(sortAlgorithm));
+        }
 
         string? dataDirectory = BenchmarksEnvironment.GetDataDirectory();
         if (string.IsNullOrEmpty(dataDirectory) || !Directory.Exists(dataDirectory))
@@ -39,6 +59,10 @@ public class FileSorterBenchmarkArgs : IComparable<FileSorterBenchmarkArgs>, ICo
 
     public override string ToString() => $"[{Size}]";
 
+    public int CompareTo(object? obj) => obj is FileSorterBenchmarkArgs other
+        ? CompareTo(other)
+        : throw new ArgumentException();
+
     public int CompareTo(FileSorterBenchmarkArgs? other)
     {
         if (other is null)
@@ -49,8 +73,4 @@ public class FileSorterBenchmarkArgs : IComparable<FileSorterBenchmarkArgs>, ICo
         long size = SizeParser.Parse(Size);
         return size.CompareTo(SizeParser.Parse(other.Size));
     }
-
-    public int CompareTo(object? obj) => obj is FileSorterBenchmarkArgs other
-        ? CompareTo(other)
-        : throw new ArgumentException();
 }

@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Benchmark.Utils;
 using Benchmarks.Data;
 
 namespace Benchmark.Services;

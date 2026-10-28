@@ -11,7 +11,8 @@ Dictionary<string, string> switchMappings = new()
     ["-i"] = nameof(FileSortingOptions.InputFilePath),
     ["-o"] = nameof(FileSortingOptions.OutputFilePath),
     ["-m"] = nameof(FileSortingOptions.MemoryLimit),
-    ["-d"] = nameof(FileSortingOptions.TempDirectory)
+    ["-d"] = nameof(FileSortingOptions.TempDirectory),
+    ["-sa"] = nameof(FileSortingOptions.BigFileSortAlgorithm),
 };
 builder.Configuration.AddCommandLine(args, switchMappings);
 
@@ -47,6 +48,6 @@ Console.ResetColor();
 
 static void PrintUsage()
 {
-    Console.WriteLine("Usage: FileSorter -i <input_file_path> [-o <output_file_path>] [-m <memory_limit>] [-d <temp_directory>]");
+    Console.WriteLine("Usage: FileSorter -i <input_file_path> [-o <output_file_path>] [-m <memory_limit>] [-d <temp_directory>] [-sa <big_file_sort_algorithm>]");
     Console.WriteLine("Example: TestFileGenerator -i input.txt -m 10MB");
 }

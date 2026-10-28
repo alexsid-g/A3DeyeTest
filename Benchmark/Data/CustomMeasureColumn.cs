@@ -15,7 +15,7 @@ public sealed class CustomMeasureColumn : IColumn
 
     public string ColumnName => Measure;
 
-    public string Legend => "[Total]: Min-Max Available, MB";
+    public string Legend => "[Total]: Min, Delta Consumed, MB";
 
     public UnitType UnitType => UnitType.Dimensionless;
 
@@ -39,7 +39,7 @@ public sealed class CustomMeasureColumn : IColumn
 
     public string GetValue(Summary summary, BenchmarkCase benchmarkCase, SummaryStyle style)
     {
-        if (benchmarkCase.HasParameters && benchmarkCase.Parameters[0].Value is GeneratorBenchmarkArgs args)
+        if (benchmarkCase.HasParameters && (benchmarkCase.Parameters[0].Value is IBenchmarkArgs args))
         {
             if (!_values.TryGetValue(args.BenchmarkId, out MetricsSummary? value))
             {
@@ -53,7 +53,9 @@ public sealed class CustomMeasureColumn : IColumn
             }
 
             double k = 1.0 / 1_000_000;
-            return $"[{k * value.TotalBytes:F1}]: {k * value.MinBytes:F1}-{k * value.MaxBytes:F1}";
+            double consumedMin = k * (value.TotalBytes - value.MaxBytes);
+            double consumedDelta = k * (value.MaxBytes - value.MinBytes);
+            return $"[{k * value.TotalBytes:F1}]: {consumedMin:F1}, +{consumedDelta:F1} MB";
         }
 
         return "NA";

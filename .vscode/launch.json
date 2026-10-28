@@ -42,12 +42,13 @@
             "name": "SortFile (Debug with args)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "Debug build solution",
+            "preLaunchTask": "Build solution (Debug)",
             "program": "${workspaceFolder}/FileSorter/bin/Debug/net8.0/FileSorter.dll",
             "args": [
-                "-i", "test-1gb.txt",
-                "-o", "sorted-data.txt",
-                "-m", "1GB"
+                "-i", "A3DEYETEST_DATA/test-data-1GB.txt",
+                "-o", "A3DEYETEST_DATA/test-data-1GB-sorted.txt",
+                "-m", "1GB",
+                "-sa", "2"
             ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"

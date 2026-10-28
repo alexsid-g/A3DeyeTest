@@ -3,7 +3,7 @@ using Benchmark.Utils;
 
 namespace Benchmark.Data;
 
-public class GeneratorBenchmarkArgs : IComparable<GeneratorBenchmarkArgs>, IComparable
+public class GeneratorBenchmarkArgs : IBenchmarkArgs
 {
     private static int _nextId;
 
@@ -34,6 +34,10 @@ public class GeneratorBenchmarkArgs : IComparable<GeneratorBenchmarkArgs>, IComp
 
     public override string ToString() => RunFast ? $"[{Size}]:F" : $"[{Size}]";
 
+    public int CompareTo(object? obj) => obj is GeneratorBenchmarkArgs other
+        ? CompareTo(other)
+        : throw new ArgumentException();
+
     public int CompareTo(GeneratorBenchmarkArgs? other)
     {
         if (other is null)
@@ -44,8 +48,4 @@ public class GeneratorBenchmarkArgs : IComparable<GeneratorBenchmarkArgs>, IComp
         long size = SizeParser.Parse(Size);
         return size.CompareTo(SizeParser.Parse(other.Size));
     }
-
-    public int CompareTo(object? obj) => obj is GeneratorBenchmarkArgs other
-        ? CompareTo(other)
-        : throw new ArgumentException();
 }
