@@ -57,7 +57,7 @@ public class FileSorterBenchmarkArgs : IBenchmarkArgs
         OutputFile = Path.Combine(dataDirectory, $"test-data-{size}-sorted.txt");
     }
 
-    public override string ToString() => $"[{Size}]";
+    public override string ToString() => IsBig ? $"[{Size}]:B-{SortAlgorithm}" : $"[{Size}]";
 
     public int CompareTo(object? obj) => obj is FileSorterBenchmarkArgs other
         ? CompareTo(other)
